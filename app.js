@@ -17,11 +17,9 @@ app.use((err, req, res, next) => {
 });
 
 app.use((err, req, res, next) => {
-  if (err.code === "22003") {
-    res.status(404).send({ msg: "ID does not exist" });
-  } else {
-    next(err);
-  }
+  if (err.status && err.msg) {
+    res.status(err.status).send({ msg: err.msg});
+  } 
 });
 
 

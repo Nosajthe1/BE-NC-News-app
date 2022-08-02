@@ -52,15 +52,15 @@ describe("task 4. GET /api/arcticles/:arcticle_id", () => {
       .get(`/api/articles/${article_id}`)
       .expect(200)
       .then(({ body }) => {
-          expect(body.articles).toEqual({
-            author: expect.any(String),
-            title: expect.any(String),
-            article_id: expect.any(Number),
-            body: expect.any(String),
-            topic: expect.any(String),
-            created_at: expect.any(String),
-            votes: expect.any(Number),
-          });
+        expect(body.articles).toEqual({
+          author: expect.any(String),
+          title: expect.any(String),
+          article_id: expect.any(Number),
+          body: expect.any(String),
+          topic: expect.any(String),
+          created_at: expect.any(String),
+          votes: expect.any(Number),
+        });
       });
   });
   test("status: 400, responds with id error that doesnt exist ", () => {
@@ -73,7 +73,7 @@ describe("task 4. GET /api/arcticles/:arcticle_id", () => {
   });
   test("status: 404, responds with id error that doesnt exist ", () => {
     return request(app)
-      .get("/api/articles/77777777777")
+      .get("/api/articles/77777777")
       .expect(404)
       .then((res) => {
         expect(res.body.msg).toBe("ID does not exist");
