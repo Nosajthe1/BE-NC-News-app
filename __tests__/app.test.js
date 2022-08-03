@@ -137,3 +137,33 @@ describe("task 5. PATCH /api/arcticles/:arcticle_id", () => {
       });
   });
 });
+
+describe("task 6. GET /api/users", () => {
+  test("status:200, responds with an array of users", () => {
+    return request(app)
+      .get("/api/users")
+      .expect(200)
+      .then(({ body }) => {
+        const { users } = body;
+        expect(users).toBeInstanceOf(Array);
+        expect(users).toHaveLength(4);
+        users.forEach((user) => {
+          expect(user).toEqual(
+            expect.objectContaining({
+              username: expect.any(String),
+              name: expect.any(String),
+              avatar_url: expect.any(String),
+            })
+          );
+        });
+      });
+  });
+  test("responds with error 404 when passed route that does not exist", () => {
+    return request(app)
+      .get("/api/hellohello")
+      .expect(404)
+      .then((res) => {
+        expect(res.body.msg).toBe("Route not found");
+      });
+  });
+});
