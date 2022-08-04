@@ -2,7 +2,6 @@ const {
   getAllArticles,
   getArticleById,
   patchIncreaseVotes,
-  articleIdWithComment,
 } = require("../models/articlesModels");
 
 exports.allArticles = (req, res, next) => {
@@ -44,9 +43,3 @@ exports.patchArticleIncreaseVotes = (req, res, next) => {
   });
 };
 
-// exports.getArticleIdWithComment = (req, res, next) => {
-//   const id = req.params.article_id;
-//   articleIdWithComment(id).then((commentArticleId) => {
-//     res.status(200).send({ comments: commentArticleId });
-//   });
-// };

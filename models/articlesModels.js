@@ -16,18 +16,11 @@ exports.getAllArticles = () => {
     });
 };
 
-// exports.articleIdWithComment = (id) => {
-//   return db
-//     .query("SELECT * FROM comments WHERE article_id = $1;", [id])
-//     .then(({ rows }) => {
-//       return rows;
-//     });
-// };
 
 exports.getArticleById = (id) => {
   return db
     .query(
-      `SELECT articles.*, COUNT(comments.article_id) AS comment_count
+      `SELECT articles.*, COUNT(comments.article_id):: INTEGER AS comment_count
         FROM comments
         RIGHT JOIN articles ON comments.article_id = articles.article_id
         WHERE articles.article_id = $1

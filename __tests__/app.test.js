@@ -4,6 +4,7 @@ const db = require("../db/connection");
 const seed = require("../db/seeds/seed");
 const data = require("../db/data/test-data/index");
 const { string } = require("pg-format");
+const articles = require("../db/data/test-data/articles");
 
 beforeEach(() => {
   return seed(data);
@@ -187,7 +188,7 @@ describe("task 7. get /api/arcticles/:arcticle_id", () => {
           topic: expect.any(String),
           created_at: expect.any(String),
           votes: expect.any(Number),
-          comment_count: "11",
+          comment_count: 11,
         });
       });
   });
@@ -224,16 +225,9 @@ describe("task 8. get /api/arcticles", () => {
       .get(`/api/articles`)
       .expect(200)
       .then(({ body }) => {
-        for (let i = 0; i < body.articles.length; i++) {
-          if (i + 1 === body.articles.length) {
-            return;
-          }
-          const thisDate = new Date(body.articles[i].created_at).valueOf();
-          const nextDate = new Date(body.articles[i + 1].created_at).valueOf();
-          if (thisDate < nextDate) {
-            throw new Error("failed not in descending order");
-          }
-        }
+        expect(body.articles).toBeSorted({
+          descending: true,
+        });
       });
   });
   test("8.responds with error 404 when passed route that does not exist", () => {
@@ -245,15 +239,3 @@ describe("task 8. get /api/arcticles", () => {
       });
   });
 });
-
-// describe("9.GET /api/articles/:article_id/comments", () => {
-//   test("an array of comments for the given `article_id` ", () => {
-//     const article_id = 1;
-//     return request(app)
-//       .get(`/api/articles/${article_id}/comments`)
-//       .expect(200)
-//       .then(({ body }) => {
-//         expect(body.comments.length).toEqual(11);
-//       });
-//   });
-// });
