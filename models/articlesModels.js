@@ -1,8 +1,32 @@
 const db = require("../db/connection");
 
+exports.getAllArticles = () => {
+  return db
+    .query(
+      `SELECT articles.*, COUNT(comments.article_id) AS comment_count
+        FROM comments
+        RIGHT JOIN articles ON comments.article_id = articles.article_id
+        JOIN users ON users.username = articles.author 
+         GROUP BY articles.article_id
+         ORDER BY articles.created_at DESC;
+         `
+    )
+    .then(({ rows }) => {
+      return rows;
+    });
+};
+
+
 exports.getArticleById = (id) => {
   return db
-    .query("SELECT * FROM articles WHERE article_id = $1", [id])
+    .query(
+      `SELECT articles.*, COUNT(comments.article_id):: INTEGER AS comment_count
+        FROM comments
+        RIGHT JOIN articles ON comments.article_id = articles.article_id
+        WHERE articles.article_id = $1
+         GROUP BY articles.article_id;`,
+      [id]
+    )
     .then(({ rows }) => {
       if (rows.length === 0) {
         return Promise.reject({
@@ -10,13 +34,9 @@ exports.getArticleById = (id) => {
           msg: "ID does not exist",
         });
       }
-      //   rows[0].comment_count = responesFromMyNewQuery
+
       return rows[0];
     });
-  // now look at comments table
-  // see how mant comments are for my article (id)
-  // add that numbre of comments to my article OBJECT
-  //
 };
 
 exports.patchIncreaseVotes = (id, vote) => {
@@ -25,4 +45,3 @@ exports.patchIncreaseVotes = (id, vote) => {
     [vote, id]
   );
 };
-// return db.query(" SELECT * FROM comments WHERE article_id = $1")

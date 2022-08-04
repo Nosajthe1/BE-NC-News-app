@@ -1,24 +1,23 @@
 const express = require("express");
 const app = express();
-const { allTopics } = require("./controllers/topicController");
+const { getTopics } = require("./controllers/topicController");
 const {
-  pullArticle,
+  allArticles,
+  pullArticleID,
   patchArticleIncreaseVotes,
 } = require("./controllers/articlesController");
-const { allUsers } = require('./controllers/userController')
+const { allUsers } = require("./controllers/userController");
 app.use(express.json());
 
-
-
-app.get("/api/topics", allTopics);
-app.get("/api/articles/:article_id", pullArticle);
+app.get("/api/topics", getTopics);
+app.get("/api/articles", allArticles);
+app.get("/api/articles/:article_id", pullArticleID);
 app.patch("/api/articles/:article_id", patchArticleIncreaseVotes);
 app.get("/api/users", allUsers);
 
-
 app.use((err, req, res, next) => {
   if (err.code === "22P02") { 
-    res.status(400).send({ msg: "Invalid URL" });
+    res.status(400).send({ msg: "Invalid URL - passed invalid ID" });
   } else {
     next(err);
   }
