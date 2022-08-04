@@ -259,7 +259,6 @@ describe("9.GET /api/articles/:article_id/comments", () => {
       .get(`/api/articles/${article_id}/comments`)
       .expect(200)
       .then(({ body }) => {
-        console.log(body.comments);
         expect(body.comments.length).toEqual(11);
       });
   });
