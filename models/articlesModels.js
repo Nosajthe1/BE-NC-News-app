@@ -52,12 +52,6 @@ exports.articleIdWithComment = (id) => {
       [id]
     )
     .then(({ rows }) => {
-      if (!rows.length) {
-        return Promise.reject({
-          status: 200,
-          msg: "No comments associated with this ID",
-        });
-      }
       return rows;
     });
 };

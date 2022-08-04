@@ -269,13 +269,13 @@ describe("9.GET /api/articles/:article_id/comments", () => {
       .get(`/api/articles/${article_id}/comments`)
       .expect(200)
       .then(({ body }) => {
-        expect(body.msg).toEqual("No comments associated with this ID");
+        expect(body.comments.length).toEqual(0);
       });
   });
 
   test("9. responds with error message when passed invalid ID type", () => {
     return request(app)
-      .get("/api/articles/thisIsWrongData")
+      .get("/api/articles/thisIsWrongData/comments")
       .expect(400)
       .then(({ body }) => {
         expect(body.msg).toBe("Invalid URL - passed invalid ID");
@@ -283,7 +283,7 @@ describe("9.GET /api/articles/:article_id/comments", () => {
   });
   test("9. responds with an err 404 when passed ID that does not exist", () => {
     return request(app)
-      .get("/api/articles/23456273")
+      .get("/api/articles/23456273/comments")
       .expect(404)
       .then((res) => {
         expect(res.body.msg).toBe("ID does not exist");
