@@ -1,9 +1,19 @@
 const {
+  getAllArticles,
   getArticleById,
   patchIncreaseVotes,
+  articleIdWithComment,
 } = require("../models/articlesModels");
 
-exports.pullArticle = (req, res, next) => {
+exports.allArticles = (req, res, next) => {
+  getAllArticles()
+    .then((articles) => {
+      res.status(200).send({ articles: articles });
+    })
+    .catch((err) => next(err));
+};
+
+exports.pullArticleID = (req, res, next) => {
   const id = req.params.article_id;
   getArticleById(id)
     .then((articles) => {
@@ -14,15 +24,15 @@ exports.pullArticle = (req, res, next) => {
 
 exports.patchArticleIncreaseVotes = (req, res, next) => {
   const vote = req.body.inc_votes;
-  if (!req.body.hasOwnProperty('inc_votes')) {
-   res.status(400).send({ msg: "Invalid input missing inc_votes prop" }); 
-   return
+  if (!req.body.hasOwnProperty("inc_votes")) {
+    res.status(400).send({ msg: "Invalid input missing inc_votes prop" });
+    return;
   }
 
   const id = req.params.article_id;
   if (isNaN(id)) {
-       res.status(400).send({ msg: "ID is not a number" }) 
-       return
+    res.status(400).send({ msg: "ID is not a number" });
+    return;
   }
 
   patchIncreaseVotes(id, vote).then(() => {
@@ -33,3 +43,10 @@ exports.patchArticleIncreaseVotes = (req, res, next) => {
       .catch((err) => next(err));
   });
 };
+
+// exports.getArticleIdWithComment = (req, res, next) => {
+//   const id = req.params.article_id;
+//   articleIdWithComment(id).then((commentArticleId) => {
+//     res.status(200).send({ comments: commentArticleId });
+//   });
+// };

@@ -34,7 +34,7 @@ describe("task 3. GET /api/topics", () => {
   });
 });
 
-describe("ALL/api/*", () => {
+describe("3. ALL/api/*", () => {
   test("responds with error 404 when passed route that does not exist", () => {
     return request(app)
       .get("/api/hellohello")
@@ -52,18 +52,20 @@ describe("task 4. GET /api/arcticles/:arcticle_id", () => {
       .get(`/api/articles/${article_id}`)
       .expect(200)
       .then(({ body }) => {
-        expect(body.articles).toEqual({
-          author: expect.any(String),
-          title: expect.any(String),
-          article_id: expect.any(Number),
-          body: expect.any(String),
-          topic: expect.any(String),
-          created_at: expect.any(String),
-          votes: expect.any(Number),
-        });
+        expect(body.articles).toEqual(
+          expect.objectContaining({
+            author: expect.any(String),
+            title: expect.any(String),
+            article_id: expect.any(Number),
+            body: expect.any(String),
+            topic: expect.any(String),
+            created_at: expect.any(String),
+            votes: expect.any(Number),
+          })
+        );
       });
   });
-  test("status: 400, responds with invalid ", () => {
+  test("4. status: 400, responds with invalid ", () => {
     return request(app)
       .get("/api/articles/PEOOHSOEPEO")
       .expect(400)
@@ -71,7 +73,7 @@ describe("task 4. GET /api/arcticles/:arcticle_id", () => {
         expect(body.msg).toBe("Invalid URL");
       });
   });
-  test("status: 404, responds with id error that doesnt exist ", () => {
+  test("4. status: 404, responds with id error that doesnt exist ", () => {
     return request(app)
       .get("/api/articles/77777777")
       .expect(404)
@@ -91,18 +93,20 @@ describe("task 5. PATCH /api/arcticles/:arcticle_id", () => {
       })
       .expect(200)
       .then(({ body }) => {
-        expect(body.articles).toEqual({
-          author: expect.any(String),
-          title: expect.any(String),
-          article_id: expect.any(Number),
-          body: expect.any(String),
-          topic: expect.any(String),
-          created_at: expect.any(String),
-          votes: 101,
-        });
+        expect(body.articles).toEqual(
+          expect.objectContaining({
+            author: expect.any(String),
+            title: expect.any(String),
+            article_id: expect.any(Number),
+            body: expect.any(String),
+            topic: expect.any(String),
+            created_at: expect.any(String),
+            votes: 101,
+          })
+        );
       });
   });
-  test("status: 400, responds with invalid URL ", () => {
+  test("5. status: 400, responds with invalid URL ", () => {
     return request(app)
       .patch("/api/articles/PEOOHSOEPEO")
       .expect(400)
@@ -113,7 +117,7 @@ describe("task 5. PATCH /api/arcticles/:arcticle_id", () => {
         expect(body.msg).toBe("ID is not a number");
       });
   });
-  test("status: 404, responds with id error that doesnt exist ", () => {
+  test("5. status: 404, responds with id error that doesnt exist ", () => {
     return request(app)
       .patch("/api/articles/777777")
       .send({
@@ -124,7 +128,7 @@ describe("task 5. PATCH /api/arcticles/:arcticle_id", () => {
         expect(res.body.msg).toBe("ID does not exist");
       });
   });
-  test("status: 400, invalid send body ", () => {
+  test("5. status: 400, invalid send body ", () => {
     const article_id = 1;
     return request(app)
       .patch(`/api/articles/${article_id}`)
@@ -139,7 +143,7 @@ describe("task 5. PATCH /api/arcticles/:arcticle_id", () => {
 });
 
 describe("task 6. GET /api/users", () => {
-  test("status:200, responds with an array of users", () => {
+  test("6. status:200, responds with an array of users", () => {
     return request(app)
       .get("/api/users")
       .expect(200)
@@ -158,7 +162,7 @@ describe("task 6. GET /api/users", () => {
         });
       });
   });
-  test("responds with error 404 when passed route that does not exist", () => {
+  test("6. responds with error 404 when passed route that does not exist", () => {
     return request(app)
       .get("/api/hellohello")
       .expect(404)
@@ -167,3 +171,89 @@ describe("task 6. GET /api/users", () => {
       });
   });
 });
+
+describe("task 7. get /api/arcticles/:arcticle_id", () => {
+  test("status:200, responds with updated articles table with extra property", () => {
+    const article_id = 1;
+    return request(app)
+      .get(`/api/articles/${article_id}`)
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.articles).toEqual({
+          author: expect.any(String),
+          title: expect.any(String),
+          article_id: expect.any(Number),
+          body: expect.any(String),
+          topic: expect.any(String),
+          created_at: expect.any(String),
+          votes: expect.any(Number),
+          comment_count: "11",
+        });
+      });
+  });
+  test("7. status: 400, responds with invalid ", () => {
+    return request(app)
+      .get("/api/articles/WOWOIEIR")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Invalid URL");
+      });
+  });
+
+  test("7. status: 404, responds with id error that doesnt exist ", () => {
+    return request(app)
+      .get("/api/articles/8989898")
+      .expect(404)
+      .then((res) => {
+        expect(res.body.msg).toBe("ID does not exist");
+      });
+  });
+});
+
+describe("task 8. get /api/arcticles", () => {
+  test("status:200, responds with updated articles table with user table info", () => {
+    return request(app)
+      .get(`/api/articles`)
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.articles.length).toEqual(12);
+      });
+  });
+  test("8.Make sure it responds in descending order", () => {
+    return request(app)
+      .get(`/api/articles`)
+      .expect(200)
+      .then(({ body }) => {
+        for (let i = 0; i < body.articles.length; i++) {
+          if (i + 1 === body.articles.length) {
+            return;
+          }
+          const thisDate = new Date(body.articles[i].created_at).valueOf();
+          const nextDate = new Date(body.articles[i + 1].created_at).valueOf();
+          if (thisDate < nextDate) {
+            throw new Error("failed not in descending order");
+          }
+        }
+      });
+  });
+  test("8.responds with error 404 when passed route that does not exist", () => {
+    return request(app)
+      .get("/api/OWOWOWOW")
+      .expect(404)
+      .then((res) => {
+        expect(res.body.msg).toBe("Route not found");
+      });
+  });
+});
+
+// describe("9.GET /api/articles/:article_id/comments", () => {
+//   test("an array of comments for the given `article_id` ", () => {
+//     const article_id = 1;
+//     return request(app)
+//       .get(`/api/articles/${article_id}/comments`)
+//       .expect(200)
+//       .then(({ body }) => {
+//         expect(body.comments.length).toEqual(11);
+//       });
+//   });
+// });
