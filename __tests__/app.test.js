@@ -56,22 +56,22 @@ describe("task 4. GET /api/arcticles/:arcticle_id", () => {
         expect(body.articles).toEqual(
           expect.objectContaining({
             author: expect.any(String),
-            title: expect.any(String),
-            article_id: expect.any(Number),
+            title: "Living in the shadow of a great man",
+            article_id: 1,
             body: expect.any(String),
-            topic: expect.any(String),
+            topic: "mitch",
             created_at: expect.any(String),
             votes: expect.any(Number),
           })
         );
       });
   });
-  test("4. status: 400, responds with invalid id type", () => {
+  test("4. status: 400, responds with invalid ID type ", () => {
     return request(app)
       .get("/api/articles/PEOOHSOEPEO")
       .expect(400)
       .then(({ body }) => {
-        expect(body.msg).toBe("Invalid URL");
+        expect(body.msg).toBe("Invalid URL - passed invalid ID");
       });
   });
   test("4. status: 404, responds with id error that doesnt exist ", () => {
@@ -97,8 +97,8 @@ describe("task 5. PATCH /api/arcticles/:arcticle_id", () => {
         expect(body.articles).toEqual(
           expect.objectContaining({
             author: expect.any(String),
-            title: expect.any(String),
-            article_id: expect.any(Number),
+            title: "Living in the shadow of a great man",
+            article_id: 1,
             body: expect.any(String),
             topic: expect.any(String),
             created_at: expect.any(String),
@@ -204,12 +204,12 @@ describe("task 7. get /api/arcticles/:arcticle_id", () => {
         });
       });
   });
-  test("7. status: 400, responds with invalid ", () => {
+  test("7. status: 400, responds with invalid ID type passed in", () => {
     return request(app)
       .get("/api/articles/WOWOIEIR")
       .expect(400)
       .then(({ body }) => {
-        expect(body.msg).toBe("Invalid URL");
+        expect(body.msg).toBe("Invalid URL - passed invalid ID");
       });
   });
 
