@@ -16,7 +16,6 @@ exports.getAllArticles = () => {
     });
 };
 
-
 exports.getArticleById = (id) => {
   return db
     .query(
@@ -44,4 +43,15 @@ exports.patchIncreaseVotes = (id, vote) => {
     "UPDATE articles SET votes = votes + $1 WHERE article_id = $2 RETURNING *;",
     [vote, id]
   );
+};
+
+exports.articleIdWithComment = (id) => {
+  return db
+    .query(
+      "SELECT comment_id, body, author, votes, created_at FROM comments WHERE article_id = $1;",
+      [id]
+    )
+    .then(({ rows }) => {
+      return rows;
+    });
 };
