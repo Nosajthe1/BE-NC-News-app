@@ -22,12 +22,20 @@ exports.pullArticleID = (req, res, next) => {
 };
 
 exports.patchArticleIncreaseVotes = (req, res, next) => {
-  const vote = req.body.inc_votes;
-  if (!req.body.hasOwnProperty("inc_votes")) {
-    res.status(400).send({ msg: "Invalid input missing inc_votes prop" });
+
+  if (
+    req.body.hasOwnProperty("inc_votes") &&
+    typeof req.body.inc_votes !== "number"
+  ) {
+    res.status(400).send({ msg: "Invalid input, wrong data type" })
     return;
   }
+    if (!req.body.hasOwnProperty("inc_votes")) {
+      res.status(400).send({ msg: "Invalid input missing inc_votes prop" });
+      return;
+    }
 
+  const vote = req.body.inc_votes;
   const id = req.params.article_id;
   if (isNaN(id)) {
     res.status(400).send({ msg: "ID is not a number" });
@@ -42,4 +50,3 @@ exports.patchArticleIncreaseVotes = (req, res, next) => {
       .catch((err) => next(err));
   });
 };
-

@@ -66,7 +66,7 @@ describe("task 4. GET /api/arcticles/:arcticle_id", () => {
         );
       });
   });
-  test("4. status: 400, responds with invalid ", () => {
+  test("4. status: 400, responds with invalid id type", () => {
     return request(app)
       .get("/api/articles/PEOOHSOEPEO")
       .expect(400)
@@ -109,7 +109,7 @@ describe("task 5. PATCH /api/arcticles/:arcticle_id", () => {
   });
   test("5. status: 400, responds with invalid URL ", () => {
     return request(app)
-      .patch("/api/articles/PEOOHSOEPEO")
+      .patch("/api/articles/WEODLWOEDJ")
       .expect(400)
       .send({
         inc_votes: 1,
@@ -139,6 +139,18 @@ describe("task 5. PATCH /api/arcticles/:arcticle_id", () => {
       .expect(400)
       .then(({ body }) => {
         expect(body.msg).toBe("Invalid input missing inc_votes prop");
+      });
+  });
+  test("5. status 400, responds with error when passed incorrect data type ", () => {
+    const article_id = 1;
+    return request(app)
+      .patch(`/api/articles/${article_id}`)
+      .send({
+        inc_votes: "hello",
+      })
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Invalid input, wrong data type");
       });
   });
 });
