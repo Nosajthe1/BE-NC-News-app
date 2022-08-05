@@ -6,11 +6,10 @@ const {
   allArticles,
   pullArticleID,
   patchArticleIncreaseVotes,
+  postInCommentById,
 } = require("./controllers/articlesController");
 const { allUsers } = require("./controllers/userController");
 app.use(express.json());
-
-
 
 app.get("/api/topics", getTopics);
 app.get("/api/articles", allArticles);
@@ -18,9 +17,10 @@ app.get("/api/articles/:article_id", pullArticleID);
 app.patch("/api/articles/:article_id", patchArticleIncreaseVotes);
 app.get("/api/articles/:article_id/comments", getArticleIdWithComment);
 app.get("/api/users", allUsers);
+app.post("/api/articles/:article_id/comments", postInCommentById);
 
 app.use((err, req, res, next) => {
-  if (err.code === "22P02") { 
+  if (err.code === "22P02") {
     res.status(400).send({ msg: "Invalid URL - passed invalid ID" });
   } else {
     next(err);

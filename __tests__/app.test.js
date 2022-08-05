@@ -289,3 +289,57 @@ describe("9.GET /api/articles/:article_id/comments", () => {
       });
   });
 });
+
+describe("10.POST /api/articles/:article_id/comments", () => {
+  test("add new comment body to specified id", () => {
+    const article_id = 2;
+    return request(app)
+      .post(`/api/articles/${article_id}/comments`)
+      .send({
+        username: "butter_bridge",
+        body: "Hi there dudes we all feeling good?",
+      })
+      .expect(201)
+      .then(({ body: { comment } }) => {
+        console.log(comment);
+        expect(comment).toEqual(
+          expect.objectContaining({
+            comment_id: expect.any(Number),
+            author: expect.any(String),
+            article_id: expect.any(Number),
+            body: expect.any(String),
+            created_at: expect.any(String),
+            votes: expect.any(Number),
+          })
+        );
+      });
+  });
+
+  test("10. responds with an err 404 when passed ID that does not exist", () => {
+    const article_id = 200;
+    return request(app)
+      .post(`/api/articles/${article_id}/comments`)
+      .send({
+        username: "butter_bridge",
+        body: "Hi there dudes we all feeling good?",
+      })
+      .expect(404)
+      .then((res) => {
+        expect(res.body.msg).toBe("ID does not exist");
+      });
+  });
+ test('10. responds with err 400 when passed Invalid ID type', () => {
+
+  return request(app)
+    .post(`/api/articles/HowdyChap/comments`)
+    .send({
+      username: "butter_bridge",
+      body: "Hi there dudes we all feeling good?",
+    })
+    .expect(400)
+    .then((res) => {
+      expect(res.body.msg).toBe("Invalid URL - passed invalid ID");
+    });
+ });
+
+});
