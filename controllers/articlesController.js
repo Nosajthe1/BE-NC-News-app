@@ -67,6 +67,13 @@ exports.getArticleIdWithComment = (req, res, next) => {
 exports.postInCommentById = (req, res, next) => {
   const id = req.params.article_id;
   const newComment = req.body
+ if (
+   !req.body.hasOwnProperty("username") &&
+   !req.body.hasOwnProperty("body")
+ ) {
+   res.status(400).send({ msg: "Invalid input, not correct props" });
+   return;
+ }
 
   getArticleById(id)
     .then(() => {

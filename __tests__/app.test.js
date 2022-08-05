@@ -301,7 +301,6 @@ describe("10.POST /api/articles/:article_id/comments", () => {
       })
       .expect(201)
       .then(({ body: { comment } }) => {
-        console.log(comment);
         expect(comment).toEqual(
           expect.objectContaining({
             comment_id: expect.any(Number),
@@ -328,18 +327,30 @@ describe("10.POST /api/articles/:article_id/comments", () => {
         expect(res.body.msg).toBe("ID does not exist");
       });
   });
- test('10. responds with err 400 when passed Invalid ID type', () => {
+  test("10. responds with err 400 when passed Invalid ID type", () => {
+    return request(app)
+      .post(`/api/articles/HowdyChap/comments`)
+      .send({
+        username: "butter_bridge",
+        body: "Hi there dudes we all feeling good?",
+      })
+      .expect(400)
+      .then((res) => {
+        expect(res.body.msg).toBe("Invalid URL - passed invalid ID");
+      });
+  });
 
-  return request(app)
-    .post(`/api/articles/HowdyChap/comments`)
-    .send({
-      username: "butter_bridge",
-      body: "Hi there dudes we all feeling good?",
-    })
-    .expect(400)
-    .then((res) => {
-      expect(res.body.msg).toBe("Invalid URL - passed invalid ID");
-    });
- });
-
+  test("10. status: 400, invalid send body ", () => {
+    const article_id = 1;
+    return request(app)
+      .post(`/api/articles/${article_id}/comments`)
+      .send({
+        usernameewq: "butter_bridge",
+        bodyewq: "Hi there dudes we all feeling good?",
+      })
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Invalid input, not correct props");
+      });
+  });
 });
