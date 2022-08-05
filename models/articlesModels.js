@@ -55,3 +55,19 @@ exports.articleIdWithComment = (id) => {
       return rows;
     });
 };
+
+exports.addCommentWithId = (id, newComment) => {
+  console.log(id)
+  console.log(newComment)
+  const { username, body }  = newComment
+  
+  return db
+  .query(
+  `INSERT INTO comments (author, body, article_id) VALUES ($1, $2, $3) RETURNING *;`,
+          [username, body, id]
+          ).then(({rows}) => {
+            return rows[0] 
+          }) 
+
+};
+
