@@ -354,3 +354,141 @@ describe("10.POST /api/articles/:article_id/comments", () => {
       });
   });
 });
+
+describe("11. GET /api/articles (queries) ", () => {
+  test("status:200, responds with default sort_by query", () => {
+    return request(app)
+      .get(`/api/articles?sort_by=created_at`)
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.articles).toBeSorted({
+          descending: true,
+          key: "created_at",
+        });
+      });
+  });
+
+  test("11.status:200, responds with sort_by query set at title", () => {
+    return request(app)
+      .get(`/api/articles?sort_by=title`)
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.articles).toBeSorted({
+          descending: true,
+          key: "title",
+        });
+      });
+  });
+
+  test("11. status:200, responds with sort_by query set at topic", () => {
+    return request(app)
+      .get(`/api/articles?sort_by=topic`)
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.articles).toBeSorted({
+          descending: true,
+          key: "topic",
+        });
+      });
+  });
+
+  test("11. status:200, responds with sort_by query set at author", () => {
+    return request(app)
+      .get(`/api/articles?sort_by=author`)
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.articles).toBeSorted({
+          descending: true,
+          key: "author",
+        });
+      });
+  });
+
+  test("11. status:200, responds with sort_by query set at votes", () => {
+    return request(app)
+      .get(`/api/articles?sort_by=votes`)
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.articles).toBeSorted({
+          descending: true,
+          key: "votes",
+        });
+      });
+  });
+
+  test("11. status:200, responds with order query in asc order set at votes", () => {
+    return request(app)
+      .get(`/api/articles?order=ASC`)
+      .expect(200)
+      .then(({ body }) => {
+        console.log(body);
+        expect(body.articles).toBeSorted("votes", {
+          ascending: true,
+        });
+      });
+  });
+
+  test("11. status:200, responds with order query in asc order set at title", () => {
+    return request(app)
+      .get(`/api/articles?order=ASC`)
+      .expect(200)
+      .then(({ body }) => {
+        console.log(body);
+        expect(body.articles).toBeSorted("title", {
+          ascending: true,
+        });
+      });
+  });
+
+  test("11. status:200, responds with topic query with all matching topics returned", () => {
+    return request(app)
+      .get(`/api/articles?topic=mitch`)
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.articles.length).toEqual(11);
+      });
+  });
+
+  test("11. status:404, responds with topic query with all matching topics returned", () => {
+    return request(app)
+      .get(`/api/articles?topic=paper`)
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toEqual('No data found');
+      });
+  });
+
+  test("11. status:400, responds with 400 err when incorrect data passed", () => {
+    return request(app)
+      .get(`/api/articles?seir_by=kwqlewi`)
+      .expect(400)
+      .then(( res ) => {
+        expect(res.body.msg).toBe("Invalid query parameter");
+      });
+  });
+
+    test("11. status:400, responds with 400 err when wrong order query data passed", () => {
+      return request(app)
+        .get(`/api/articles?order=kwqlewi`)
+        .expect(400)
+        .then((res) => {
+          expect(res.body.msg).toBe("It appears this query parameter does not exist");
+        });
+    });
+    test.only("11. status:400, responds with 400 err when wrong sort_by query data passed", () => {
+      return request(app)
+        .get(`/api/articles?sort_by=banana`)
+        .expect(400)
+        .then((res) => {
+          expect(res.body.msg).toBe("It appears this query parameter does not exist");
+        });
+    });   
+
+  
+
+
+
+
+
+
+});

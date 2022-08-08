@@ -1,3 +1,4 @@
+const { checkIfExists } = require("../utils")
 const {
   getAllArticles,
   getArticleById,
@@ -7,7 +8,39 @@ const {
 } = require("../models/articlesModels");
 
 exports.allArticles = (req, res, next) => {
-  getAllArticles()
+   const { sort_by } = req.query
+   const { order } = req.query
+   const { topic } = req.query
+   const queryArr = Object.keys(req.query);
+  
+const validSortBy = ["title", "topic", "author", "created_at", "votes"];
+const validOrder = ["asc", "desc", "ASC", "DESC"];
+
+const validQueries = ["sort_by", "order", "topic"];
+let invalidEntry = false;
+
+queryArr.forEach((query) => {
+if (!validQueries.includes(query)) {
+  invalidEntry = true;
+}
+});
+
+if (invalidEntry) { 
+  res.status(400).send({msg: "Invalid query parameter"});
+ return
+};
+
+if (topic) {
+  checkIfExists("articles", "topic", topic)
+}
+
+
+if  (!validSortBy.includes(sort_by) || !validOrder.includes(order)) {
+res.status(400).send({ msg: "It appears this query parameter does not exist"});
+return
+};
+
+  getAllArticles(sort_by, order, topic, queryArr)
     .then((articles) => {
       res.status(200).send({ articles: articles });
     })
@@ -68,7 +101,7 @@ exports.postInCommentById = (req, res, next) => {
   const id = req.params.article_id;
   const newComment = req.body
  if (
-   !req.body.hasOwnProperty("username") &&
+   !req.body.hasOwnProperty("username") ||
    !req.body.hasOwnProperty("body")
  ) {
    res.status(400).send({ msg: "Invalid input, not correct props" });
