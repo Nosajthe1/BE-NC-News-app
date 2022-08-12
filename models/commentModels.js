@@ -1,0 +1,22 @@
+const db = require("../db/connection");
+
+exports.commentByID = (id) => {
+  return db
+    .query(`SELECT * FROM comments WHERE comment_id = $1;`, [id])
+    .then(({ rows }) => {
+      if (rows.length === 0) {
+        return Promise.reject({
+          status: 404,
+          msg: "ID does not exist",
+        });
+      }
+
+      return rows;
+    });
+};
+
+exports.deleteCommentId = (id) => {
+  return db.query(`DELETE FROM comments WHERE comment_id = $1 RETURNING *;`, [
+    id,
+  ]);
+};

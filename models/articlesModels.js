@@ -1,48 +1,34 @@
 const db = require("../db/connection");
 const { checkIfExists } = require("../utils");
 
-exports.getAllArticles = (sort_by, order, topic) => { 
-  if (sort_by === undefined ) {
-     sort_by = 'created_at'
-  } 
-  if (order === undefined ) {
-    order = 'DESC'
-  }
-
-   const queryValues = [];
-
-let queryStr = ``; 
-let queryStr1 = `SELECT articles.*, COUNT(comments.article_id) AS comment_count
+exports.getAllArticles = (sort_by, order, topic) => {
+  const queryValues = [];
+  let queryStr = ``;
+  let queryStr1 = `SELECT articles.*, COUNT(comments.article_id) AS comment_count
         FROM comments
         RIGHT JOIN articles ON comments.article_id = articles.article_id
         JOIN users ON users.username = articles.author `;
 
-let queryStr2 = ` GROUP BY articles.article_id
+  let queryStr2 = ` GROUP BY articles.article_id
          ORDER BY articles.${sort_by} ${order};`;
 
-if (topic) {
-  queryValues.push(topic);
-  queryStr = queryStr1 + `WHERE topic = $1` + queryStr2;
+  if (topic) {
+    queryValues.push(topic);
+    queryStr = queryStr1 + `WHERE topic = $1` + queryStr2;
+  } else {
+    queryStr = queryStr1 + queryStr2;
+  }
+
+  return db.query(queryStr, queryValues).then(({ rows }) => {
+    if (rows.length === 0) {
+      return Promise.reject({
+        status: 404,
+        msg: "No data found",
+      });
+    }
+    return rows;
+  });
 };
-   
-  return db
-    .query(queryStr, queryValues)
-    .then(({ rows }) => {
-     if (rows.length === 0) {
-       return Promise.reject({
-         status: 404,
-         msg: "No data found",
-       });
-     }
-      return rows;
-    });
-
-
-};
-
-
-
-
 
 exports.getArticleById = (id) => {
   return db
@@ -85,16 +71,14 @@ exports.articleIdWithComment = (id) => {
 };
 
 exports.addCommentWithId = (id, newComment) => {
+  const { username, body } = newComment;
 
-  const { username, body }  = newComment
-  
   return db
-  .query(
-  `INSERT INTO comments (author, body, article_id) VALUES ($1, $2, $3) RETURNING *;`,
-          [username, body, id]
-          ).then(({rows}) => {
-            return rows[0] 
-          }) 
-
+    .query(
+      `INSERT INTO comments (author, body, article_id) VALUES ($1, $2, $3) RETURNING *;`,
+      [username, body, id]
+    )
+    .then(({ rows }) => {
+      return rows[0];
+    });
 };
-

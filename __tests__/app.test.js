@@ -421,7 +421,6 @@ describe("11. GET /api/articles (queries) ", () => {
       .get(`/api/articles?order=ASC`)
       .expect(200)
       .then(({ body }) => {
-        console.log(body);
         expect(body.articles).toBeSorted("votes", {
           ascending: true,
         });
@@ -433,7 +432,6 @@ describe("11. GET /api/articles (queries) ", () => {
       .get(`/api/articles?order=ASC`)
       .expect(200)
       .then(({ body }) => {
-        console.log(body);
         expect(body.articles).toBeSorted("title", {
           ascending: true,
         });
@@ -454,7 +452,8 @@ describe("11. GET /api/articles (queries) ", () => {
       .get(`/api/articles?topic=paper`)
       .expect(404)
       .then(({ body }) => {
-        expect(body.msg).toEqual('No data found');
+        console.log(body);
+        expect(body.msg).toEqual("This resource was not found");
       });
   });
 
@@ -462,33 +461,45 @@ describe("11. GET /api/articles (queries) ", () => {
     return request(app)
       .get(`/api/articles?seir_by=kwqlewi`)
       .expect(400)
-      .then(( res ) => {
+      .then((res) => {
         expect(res.body.msg).toBe("Invalid query parameter");
       });
   });
 
-    test("11. status:400, responds with 400 err when wrong order query data passed", () => {
-      return request(app)
-        .get(`/api/articles?order=kwqlewi`)
-        .expect(400)
-        .then((res) => {
-          expect(res.body.msg).toBe("It appears this query parameter does not exist");
-        });
-    });
-    test.only("11. status:400, responds with 400 err when wrong sort_by query data passed", () => {
-      return request(app)
-        .get(`/api/articles?sort_by=banana`)
-        .expect(400)
-        .then((res) => {
-          expect(res.body.msg).toBe("It appears this query parameter does not exist");
-        });
-    });   
-
-  
-
-
-
-
-
-
+  test("11. status:400, responds with 400 err when wrong order query data passed", () => {
+    return request(app)
+      .get(`/api/articles?order=kwqlewi`)
+      .expect(400)
+      .then((res) => {
+        expect(res.body.msg).toBe(
+          "It appears this query parameter does not exist"
+        );
+      });
+  });
+  test("11. status:400, responds with 400 err when wrong sort_by query data passed", () => {
+    return request(app)
+      .get(`/api/articles?sort_by=banana`)
+      .expect(400)
+      .then((res) => {
+        expect(res.body.msg).toBe(
+          "It appears this query parameter does not exist"
+        );
+      });
+  });
 });
+
+describe("12. DELETE comment with comment ID, no response", () => {
+  test("should delete comment with specified ID", () => {
+    return request(app).delete(`/api/comments/2`).expect(204);
+  });
+
+  test("12 DELETE:404 responds with error message when given a non-existent id", () => {
+    return request(app)
+      .delete("/api/comments/999")
+      .expect(404)
+      .then((response) => {
+        expect(response.body.msg).toBe("ID does not exist");
+      });
+  });
+});
+

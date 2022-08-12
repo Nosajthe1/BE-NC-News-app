@@ -1,4 +1,4 @@
-const { checkIfExists } = require("../utils")
+const { checkIfExists } = require("../utils");
 const {
   getAllArticles,
   getArticleById,
@@ -7,38 +7,52 @@ const {
   addCommentWithId,
 } = require("../models/articlesModels");
 
+// this is where my request comes in
+// sanitise it... set defaults etc
 exports.allArticles = (req, res, next) => {
-   const { sort_by } = req.query
-   const { order } = req.query
-   const { topic } = req.query
-   const queryArr = Object.keys(req.query);
-  
-const validSortBy = ["title", "topic", "author", "created_at", "votes"];
-const validOrder = ["asc", "desc", "ASC", "DESC"];
+  let { sort_by } = req.query;
+  let { order } = req.query;
+  let { topic } = req.query;
+  const queryArr = Object.keys(req.query);
 
-const validQueries = ["sort_by", "order", "topic"];
-let invalidEntry = false;
+  const validSortBy = ["title", "topic", "author", "created_at", "votes"];
+  const validOrder = ["asc", "desc", "ASC", "DESC"];
 
-queryArr.forEach((query) => {
-if (!validQueries.includes(query)) {
-  invalidEntry = true;
-}
-});
+  const validQueries = ["sort_by", "order", "topic"];
+  let invalidEntry = false;
 
-if (invalidEntry) { 
-  res.status(400).send({msg: "Invalid query parameter"});
- return
-};
+  if (order === undefined) {
+    order = "DESC";
+  }
 
-if (topic) {
-  checkIfExists("articles", "topic", topic)
-}
+  if (sort_by === undefined) {
+    sort_by = "created_at";
+  }
 
+  queryArr.forEach((query) => {
+    if (!validQueries.includes(query)) {
+      invalidEntry = true;
+    }
+  });
 
-if  (!validSortBy.includes(sort_by) || !validOrder.includes(order)) {
-res.status(400).send({ msg: "It appears this query parameter does not exist"});
-return
-};
+  if (invalidEntry) {
+    res.status(400).send({ msg: "Invalid query parameter" });
+    return;
+  }
+
+  if (topic && topic !== undefined) {
+    checkIfExists("articles", "topic", topic).catch((error) => {
+      res.status(error.status).send({ msg: error.msg });
+      return;
+    });
+  }
+
+  if (!validSortBy.includes(sort_by) || !validOrder.includes(order)) {
+    res
+      .status(400)
+      .send({ msg: "It appears this query parameter does not exist" });
+    return;
+  }
 
   getAllArticles(sort_by, order, topic, queryArr)
     .then((articles) => {
@@ -99,21 +113,21 @@ exports.getArticleIdWithComment = (req, res, next) => {
 
 exports.postInCommentById = (req, res, next) => {
   const id = req.params.article_id;
-  const newComment = req.body
- if (
-   !req.body.hasOwnProperty("username") ||
-   !req.body.hasOwnProperty("body")
- ) {
-   res.status(400).send({ msg: "Invalid input, not correct props" });
-   return;
- }
+  const newComment = req.body;
+  if (
+    !req.body.hasOwnProperty("username") ||
+    !req.body.hasOwnProperty("body")
+  ) {
+    res.status(400).send({ msg: "Invalid input, not correct props" });
+    return;
+  }
 
   getArticleById(id)
     .then(() => {
-    return  addCommentWithId(id, newComment)
+      return addCommentWithId(id, newComment);
     })
     .then((comment) => {
-      res.status(201).send({comment});
+      res.status(201).send({ comment });
     })
     .catch((err) => next(err));
 };
