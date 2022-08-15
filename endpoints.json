@@ -23,5 +23,216 @@
         }
       ]
     }
-  }
+  },
+  "GET /api/articles:article_id": {
+    "description": "provides an object of a single article with specified article id",
+    "queries": [],
+    "exampleResponse": {
+      "articles": {
+        "article_id": 1,
+        "title": "Seafood substitutions are increasing",
+        "topic": "cooking",
+        "author": "weegembump",
+        "body": "Text from the article..",
+        "created_at": 1527695953341,
+        "votes": 11
+      }
+    }
+  },
+  "PATCH /api/articles:article_id": {
+    "description": "Increments the votes property of a specified article by a number which is passed in through the request",
+    "queries": [],
+    "exampleRequest": { "inc_votes": 100 },
+    "exampleResponse": {
+      "articles": {
+        "article_id": 1,
+        "title": "Seafood substitutions are increasing",
+        "topic": "cooking",
+        "author": "weegembump",
+        "body": "Text from the article..",
+        "created_at": 1527695953341,
+        "votes": 111
+      }
+    }
+  },
+  "GET /api/users": {
+    "description": "provides an array of all users",
+    "queries": [],
+    "exampleResponse": {
+      "users": [
+        {
+          "username": "tickle122",
+          "name": "Tom Tickle",
+          "avatar_url": "https://vignette.wikia.nocookie.net/mrmen/images/d/d6/Mr-Tickle-9a.png/revision/latest?cb=20180127221953"
+        },
+        {
+          "username": "grumpy19",
+          "name": "Paul Grump",
+          "avatar_url": "https://vignette.wikia.nocookie.net/mrmen/images/7/78/Mr-Grumpy-3A.PNG/revision/latest?cb=20170707233013"
+        },
+        {
+          "username": "happyamy2016",
+          "name": "Amy Happy",
+          "avatar_url": "https://vignette1.wikia.nocookie.net/mrmen/images/7/7f/Mr_Happy.jpg/revision/latest?cb=20140102171729"
+        },
+        {
+          "username": "cooljmessy",
+          "name": "Peter Messy",
+          "avatar_url": "https://vignette.wikia.nocookie.net/mrmen/images/1/1a/MR_MESSY_4A.jpg/revision/latest/scale-to-width-down/250?cb=20170730171002"
+        },
+        {
+          "username": "weegembump",
+          "name": "Gemma Bump",
+          "avatar_url": "https://vignette.wikia.nocookie.net/mrmen/images/7/7e/MrMen-Bump.png/revision/latest?cb=20180123225553"
+        },
+        {
+          "username": "jessjelly",
+          "name": "Jess Jelly",
+          "avatar_url": "https://vignette.wikia.nocookie.net/mrmen/images/4/4f/MR_JELLY_4A.jpg/revision/latest?cb=20180104121141"
+        }
+      ]
+    }
+  },
+  "GET /api/articles:article_id with comment_count": {
+    "description": "responds with updated articles object with extra comment_count property with specified article id",
+    "queries": [],
+    "exampleResponse": {
+      "articles": {
+        "article_id": 1,
+        "title": "Seafood substitutions are increasing",
+        "topic": "cooking",
+        "author": "weegembump",
+        "body": "Text from the article..",
+        "created_at": 1527695953341,
+        "votes": 11,
+        "comment_count": 11
+      }
+    }
+  },
+  "GET /api/articles ": {
+    "description": "serves an array of updated articles table with user info in",
+    "queries": [],
+    "exampleResponse": {
+      "articles": [
+        {
+          "article_id": 3,
+          "title": "Eight pug gifs that remind me of mitch",
+          "topic": "mitch",
+          "author": "icellusedkars",
+          "body": "some gifs",
+          "created_at": "2020-11-03T09:12:00.000Z",
+          "votes": 0,
+          "comment_count": "2"
+        }
+      ]
+    }
+  },
+  "GET /api/articles:article_id/comments": {
+    "description": "responds with an array of comment objects for specified article id",
+    "queries": [],
+    "exampleResponse": {
+      "comments": [
+        {
+          "comment_id": 2,
+          "body": "The beautiful thing about treasure is that it exists. Got to find out what kind of sheets these are; not cotton, not rayon, silky.",
+          "author": "butter_bridge",
+          "votes": 14,
+          "created_at": "2020-10-31T03:03:00.000Z"
+        },
+        {
+          "comment_id": 3,
+          "body": "Replacing the quiet elegance of the dark suit and tie with the casual indifference of these muted earth tones is a form of fashion suicide, but, uh, call me crazy — onyou it works.",
+          "author": "icellusedkars",
+          "votes": 100,
+          "created_at": "2020-03-01T01:13:00.000Z"
+        },
+        {
+          "comment_id": 4,
+          "body": " I carry a log — yes. Is it funny to you? It is not to me.",
+          "author": "icellusedkars",
+          "votes": -100,
+          "created_at": "2020-02-23T12:01:00.000Z"
+        },
+        {
+          "comment_id": 5,
+          "body": "I hate streaming noses",
+          "author": "icellusedkars",
+          "votes": 0,
+          "created_at": "2020-11-03T21:00:00.000Z"
+        },
+        {
+          "comment_id": 6,
+          "body": "I hate streaming eyes even more",
+          "author": "icellusedkars",
+          "votes": 0,
+          "created_at": "2020-04-11T21:02:00.000Z"
+        },
+        {
+          "comment_id": 7,
+          "body": "Lobster pot",
+          "author": "icellusedkars",
+          "votes": 0,
+          "created_at": "2020-05-15T20:19:00.000Z"
+        },
+        {
+          "comment_id": 8,
+          "body": "Delicious crackerbreads",
+          "author": "icellusedkars",
+          "votes": 0,
+          "created_at": "2020-04-14T20:19:00.000Z"
+        },
+        {
+          "comment_id": 9,
+          "body": "Superficially charming",
+          "author": "icellusedkars",
+          "votes": 0,
+          "created_at": "2020-01-01T03:08:00.000Z"
+        },
+        {
+          "comment_id": 12,
+          "body": "Massive intercranial brain haemorrhage",
+          "author": "icellusedkars",
+          "votes": 0,
+          "created_at": "2020-03-02T07:10:00.000Z"
+        },
+        {
+          "comment_id": 13,
+          "body": "Fruit pastilles",
+          "author": "icellusedkars",
+          "votes": 0,
+          "created_at": "2020-06-15T10:25:00.000Z"
+        },
+        {
+          "comment_id": 18,
+          "body": "This morning, I showered for nine minutes.",
+          "author": "butter_bridge",
+          "votes": 16,
+          "created_at": "2020-07-21T00:20:00.000Z"
+        }
+      ]
+    }
+  },
+  "GET  /api/articles:article_id/comments": {
+    "description": "Receives an object with username/body properties and posts that comment to the specified id ",
+    "queries": [],
+    "exampleRequest": {
+      "username": "butter_bridge",
+      "body": "The beautiful thing about treasure is that it exists. Got to find out what kind of sheets these are; not cotton, not rayon, silky."
+    },
+    "exampleResponse": {
+      "articles": {
+        "article_id": 1,
+        "author": "butter_bridge",
+        "body": "The beautiful thing about treasure is that it exists. Got to find out what kind of sheets these are; not cotton, not rayon, silky.",
+        "created_at": "2020-04-06T12:17:00.000Z",
+        "votes": 14
+      }
+    }
+  },
+
+  "DELETE /api/comments/:comment_id": {
+    "description": "Deletes the specified comment and responds with a status 204",
+    "queries": []
+  },
+  "exampleResponse": { "status": 204 }
 }

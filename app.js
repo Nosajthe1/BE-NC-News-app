@@ -12,7 +12,6 @@ const { allUsers } = require("./controllers/userController");
 const { deleteCommentByID } = require("./controllers/commentController");
 app.use(express.json());
 
-
 app.get("/api/topics", getTopics);
 app.get("/api/articles", allArticles);
 app.get("/api/articles/:article_id", pullArticleID);

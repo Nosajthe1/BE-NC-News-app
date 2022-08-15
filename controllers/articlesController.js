@@ -7,8 +7,6 @@ const {
   addCommentWithId,
 } = require("../models/articlesModels");
 
-// this is where my request comes in
-// sanitise it... set defaults etc
 exports.allArticles = (req, res, next) => {
   let { sort_by } = req.query;
   let { order } = req.query;

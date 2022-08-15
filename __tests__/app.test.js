@@ -452,7 +452,6 @@ describe("11. GET /api/articles (queries) ", () => {
       .get(`/api/articles?topic=paper`)
       .expect(404)
       .then(({ body }) => {
-        console.log(body);
         expect(body.msg).toEqual("This resource was not found");
       });
   });
@@ -502,4 +501,3 @@ describe("12. DELETE comment with comment ID, no response", () => {
       });
   });
 });
-
