@@ -8,9 +8,7 @@ const {
 } = require("../models/articlesModels");
 
 exports.allArticles = (req, res, next) => {
-  let { sort_by } = req.query;
-  let { order } = req.query;
-  let { topic } = req.query;
+  let { sort_by, order, topic } = req.query;
   const queryArr = Object.keys(req.query);
 
   const validSortBy = ["title", "topic", "author", "created_at", "votes"];
